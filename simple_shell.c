@@ -13,6 +13,7 @@ int main(void)
 	size_t n = 0;
 	int characters;
 	char *lineptr;
+	char **tok = NULL;
 
 	while (1)  /* Bucle infinito */
 	{
@@ -26,7 +27,8 @@ int main(void)
 		{
 			break;
 		}
-
+		tok = tokens(lineptr);
+		_execve(tok);
 	}
 	free(lineptr); /*libera lineptr*/
 	return (0);  /* Termina el programa con éxito */
