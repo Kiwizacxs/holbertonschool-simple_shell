@@ -15,6 +15,7 @@ int main(void)
 	char *lineptr;
 	char **tok = NULL;
 
+
 	while (1)  /* Bucle infinito */
 	{
 		printf("%s", prompt);  /* Imprime el indicador del comando */
@@ -28,7 +29,9 @@ int main(void)
 			break;
 		}
 		tok = tokens(lineptr);
-		_execve(tok);
+		if (_execve(tok) == 3)
+			continue;
+		free(tok);
 	}
 	free(lineptr); /*libera lineptr*/
 	return (0);  /* Termina el programa con éxito */
