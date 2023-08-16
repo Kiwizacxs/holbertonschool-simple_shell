@@ -14,6 +14,7 @@ int main(void)
 	int characters;
 	char *lineptr;
 	char **tok = NULL;
+	/*char *PATH = _getenv(environ);*/
 
 
 	while (1)  /* Bucle infinito */
@@ -24,13 +25,22 @@ int main(void)
 		{
 			break;
 		}
+		/**
+		printf("%c\n", PATH[79]);
+		printf("%ld", strlen(PATH));
+		free(PATH);
+		*/
 		if (strcmp(lineptr, "exit\n") == 0)
 		{
 			break;
 		}
-		tok = tokens(lineptr);
-		if (_execve(tok) == 3)
+		tok = tokens(lineptr, " \n\t");
+		if (_execve(tok, tok[0]) == 3)
+		{
+			perror("Error");
 			continue;
+		}
+		free(tok[0]);
 		free(tok);
 	}
 	free(lineptr); /*libera lineptr*/

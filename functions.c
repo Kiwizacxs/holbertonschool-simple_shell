@@ -1,14 +1,15 @@
 #include "main.h"
 
-char **tokens(char *str)
+char **tokens(const char *str, char *del)
 {
     char **tok = NULL;
     int len = 0;
     int n_tokens = 0;
+    char *copy = strdup(str);
 
-    while (str[len] != '\0')
+    while (copy[len] != '\0')
     {
-        if (str[len] == ' ' || str[len + 1] == '\0')
+        if (copy[len] == del[0] || copy[len + 1] == '\0')
         {
             n_tokens++;
         }
@@ -20,32 +21,27 @@ char **tokens(char *str)
         return (NULL);
     }
     len = 1;
-    tok[0] = strtok(str, "\n\t ");
+    tok[0] = strtok(copy, del);
     while (len != n_tokens)
     {
-        tok[len] = strtok(NULL, "\n\t ");
+        tok[len] = strtok(NULL, del);
         len++;
     }
-    tok[len] = '\0';
     return (tok);
 }
 
-int _execve(char **av)
+int _execve(char **av, char *av_zero)
 {
     struct stat st;
     pid_t child;
     int status;
-    char *PATH = NULL;
     
-    if (stat(av[0], &st) == -1)
+    if (stat(av_zero, &st) == -1)
     {
+        free(av_zero);
         free(av);
-        perror("error");
         return (3);
     }
-
-    PATH = _getenv(environ);
-    printf("%s\n", PATH);
     child = fork();
 
     if (child == -1)
@@ -55,18 +51,17 @@ int _execve(char **av)
     }
     else if (child == 0)
     {
-        if (strncmp("/bin/", av[0], 5) == 0)
+        if (execve(av_zero, av, NULL) == -1)
         {
-            if (execve(av[0], av, NULL) == -1)
-            {
-                perror("error");
-            }
+            perror("error");
         }
     }
-        else
-        {
-            wait(&status);
-        }
+    else
+    {
+        wait(&status);
+    }
+    free(av[0]);
+    free(av);
     return (0);
 }
 
@@ -105,3 +100,25 @@ char *_getenv(char **env)
     }
     return (PATH);
 }
+
+/**
+int add_route(char **str)
+{
+    char *PATH = _getenv(environ);
+    char **dir = tokens(PATH, ":");
+    int len = 0;
+    int success = 1;
+    char *upgrade = NULL;
+
+    while (success != 0 || dir[len] != NULL)
+    {
+        upgrade = malloc(strlen(str[0]) + strlen(dir[len]) + 2);
+        strcpy(upgrade, dir[len]);
+        strcat(upgrade, str[0]);
+        success = _execve(str, upgrade);
+        len++;
+        free(upgrade);
+    }
+    return (0);
+}
+*/

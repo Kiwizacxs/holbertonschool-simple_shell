@@ -11,7 +11,8 @@
 
 /*prototypes functions*/
 extern char **environ;
-int _execve(char **av);
-char **tokens(char *str);
+int _execve(char **av, char *av_zero);
+char **tokens(const char *str, char *del);
 char *_getenv(char **env);
+int add_route(char **str);
 #endif
