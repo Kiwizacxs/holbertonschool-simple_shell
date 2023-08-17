@@ -104,12 +104,14 @@ int add_route(char **str)
         strcat(update, str[0]);
         if (_execve(str, update) == 0)
         {
+            free(PATH);
             free(update);
             return (0);
         }
         free(update);
         len++;
     }
+    free(PATH);
     free(dir);
     return (3);
 }
