@@ -106,6 +106,7 @@ int add_route(char **str)
         {
             free(PATH);
             free(update);
+            free(dir);
             return (0);
         }
         free(update);
