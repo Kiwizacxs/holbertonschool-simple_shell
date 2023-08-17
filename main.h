@@ -12,7 +12,7 @@
 /*prototypes functions*/
 extern char **environ;
 int _execve(char **av, char *av_zero);
-char **tokens(char *str, char *del);
+char **tokens(const char *str, char *del);
 char *_getenv(char **env);
 void add_route(char *tok, char **str);
 #endif

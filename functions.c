@@ -1,13 +1,17 @@
 #include "main.h"
 
-char **tokens(char *str, char *del)
+char **tokens(const char *str, char *del)
 {
     char **tok = NULL;
     int len = 0;
     int n_tokens = 0;
-    char *copy = NULL;
+    char *copy;
     
     copy = strdup(str);
+    if (copy == NULL)
+    {
+        return (NULL);
+    }
     while (copy[len] != '\0')
     {
         if (copy[len] == del[0] || copy[len + 1] == '\0')
@@ -19,6 +23,7 @@ char **tokens(char *str, char *del)
     tok = malloc(sizeof(char *) * (n_tokens + 1));
     if (tok == NULL)
     {
+        free(copy);
         return (NULL);
     }
     len = 0;
@@ -92,19 +97,19 @@ char *_getenv(char **env)
 void add_route(char *tok, char **str)
 {
     char *PATH = _getenv(environ);
-    char **dir;
+    char **dir = NULL;
     int len = 0;
     char *update = NULL;
     int success = 1;
 
-    if (PATH == NULL)
-    {
-        return;
-    }
     dir = tokens(PATH, ":");
     while (dir[len] != NULL)
     {
         update = calloc(strlen(dir[len]) + strlen(tok) + 2, sizeof(char));
+        if (update == NULL)
+        {
+            exit(EXIT_FAILURE);
+        }
         strcat(update, dir[len]);
         strcat(update, "/");
         strcat(update, tok);
@@ -120,5 +125,6 @@ void add_route(char *tok, char **str)
     {
         perror("Error");
     }
+    free(PATH);
     free(dir);
 }
