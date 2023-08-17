@@ -1,20 +1,14 @@
 #include "main.h"
 
-char **tokens(const char *str, char *del)
+char **tokens(char *str, char *del)
 {
     char **tok = NULL;
     int len = 0;
     int n_tokens = 0;
-    char *copy;
-    
-    copy = strdup(str);
-    if (copy == NULL)
+
+    while (str[len] != '\0')
     {
-        return (NULL);
-    }
-    while (copy[len] != '\0')
-    {
-        if (copy[len] == del[0] || copy[len + 1] == '\0')
+        if (str[len] == del[0] || str[len + 1] == '\0')
         {
             n_tokens++;
         }
@@ -23,11 +17,11 @@ char **tokens(const char *str, char *del)
     tok = malloc(sizeof(char *) * (n_tokens + 1));
     if (tok == NULL)
     {
-        free(copy);
+        free(str);
         return (NULL);
     }
     len = 0;
-    tok[0] = strtok(copy, del);
+    tok[0] = strtok(str, del);
     while (len < n_tokens)
     {
         len++;
@@ -94,37 +88,54 @@ char *_getenv(char **env)
     return (PATH);
 }
 
-void add_route(char *tok, char **str)
+int add_route(char **str)
 {
     char *PATH = _getenv(environ);
-    char **dir = NULL;
+    char **dir;
+    char *update;
     int len = 0;
-    char *update = NULL;
-    int success = 1;
 
     dir = tokens(PATH, ":");
     while (dir[len] != NULL)
     {
-        update = calloc(strlen(dir[len]) + strlen(tok) + 2, sizeof(char));
-        if (update == NULL)
-        {
-            exit(EXIT_FAILURE);
-        }
-        strcat(update, dir[len]);
+        update = malloc(strlen(dir[len]) + strlen(str[0]) + 2);
+        strcpy(update, dir[len]);
         strcat(update, "/");
-        strcat(update, tok);
-        success = _execve(str, update);
-        len++;
-        free(update);
-        if (success == 0)
+        strcat(update, str[0]);
+        if (_execve(str, update) == 0)
         {
-            break;
+            free(update);
+            return (0);
+        }
+        free(update);
+        len++;
+    }
+    free(dir);
+    return (3);
+}
+
+char *check_lineptr(char *str)
+{
+    int len = 0;
+
+    if (strcmp(str, "\n") == 0)
+    {
+        return (NULL);
+    }
+    if (str[0] == 9 || str[0] == 32)
+    {
+        while (str[len] != '\0')
+        {
+            if (str[len] != 32 && str[len] != 10 && str[len] != 9)
+            {
+                break;
+            }
+            len++;
+        }
+        if (str[len] == '\0')
+        {
+            return (NULL);
         }
     }
-    if (success == 3)
-    {
-        perror("Error");
-    }
-    free(PATH);
-    free(dir);
+    return (str);
 }
