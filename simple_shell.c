@@ -11,11 +11,9 @@ int main(void)
 {
 	char *prompt = "#cisfun$ "; /*Cadena que representa el indicador del comando*/
 	size_t n = 0;
-	int characters;
-	char *lineptr;
+	ssize_t characters = 0;
+	char *lineptr = NULL;
 	char **tok = NULL;
-	/*char *PATH = _getenv(environ);*/
-
 
 	while (1)  /* Bucle infinito */
 	{
@@ -25,23 +23,22 @@ int main(void)
 		{
 			break;
 		}
-		/**
-		printf("%c\n", PATH[79]);
-		printf("%ld", strlen(PATH));
-		free(PATH);
-		*/
 		if (strcmp(lineptr, "exit\n") == 0)
 		{
 			break;
 		}
-		tok = tokens(lineptr, " \n\t");
-		if (_execve(tok, tok[0]) == 3)
+		if (strcmp(lineptr, "\n") != 0)
 		{
-			perror("Error");
-			continue;
+			tok = tokens(lineptr, " \n\t");
+			if (_execve(tok, tok[0]) == 3)
+			{
+				add_route(tok[0], tok);
+				continue;
+			}
+			free(tok[0]);
+			free(tok);
 		}
-		free(tok[0]);
-		free(tok);
+		free(lineptr);
 	}
 	free(lineptr); /*libera lineptr*/
 	return (0);  /* Termina el programa con éxito */

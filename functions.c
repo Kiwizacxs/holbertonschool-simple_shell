@@ -1,12 +1,13 @@
 #include "main.h"
 
-char **tokens(const char *str, char *del)
+char **tokens(char *str, char *del)
 {
     char **tok = NULL;
     int len = 0;
     int n_tokens = 0;
-    char *copy = strdup(str);
-
+    char *copy = NULL;
+    
+    copy = strdup(str);
     while (copy[len] != '\0')
     {
         if (copy[len] == del[0] || copy[len + 1] == '\0')
@@ -15,17 +16,17 @@ char **tokens(const char *str, char *del)
         }
         len++;
     }
-    tok = malloc(sizeof(char *) * n_tokens);
+    tok = malloc(sizeof(char *) * (n_tokens + 1));
     if (tok == NULL)
     {
         return (NULL);
     }
-    len = 1;
+    len = 0;
     tok[0] = strtok(copy, del);
-    while (len != n_tokens)
+    while (len < n_tokens)
     {
-        tok[len] = strtok(NULL, del);
         len++;
+        tok[len] = strtok(NULL, del);
     }
     return (tok);
 }
@@ -38,8 +39,6 @@ int _execve(char **av, char *av_zero)
     
     if (stat(av_zero, &st) == -1)
     {
-        free(av_zero);
-        free(av);
         return (3);
     }
     child = fork();
@@ -51,17 +50,16 @@ int _execve(char **av, char *av_zero)
     }
     else if (child == 0)
     {
-        if (execve(av_zero, av, NULL) == -1)
+        if (execve(av_zero, av, environ) == -1)
         {
             perror("error");
+            exit(1);
         }
     }
     else
     {
-        wait(&status);
+        waitpid(child, &status, 0);
     }
-    free(av[0]);
-    free(av);
     return (0);
 }
 
@@ -69,19 +67,13 @@ char *_getenv(char **env)
 {
     char *PATH = NULL;
     int len = 0, index = 0, i = 0;
-    char find[6];
+    char find[6] = "PATH=";
 
     while (env[len] != NULL)
     {
-        while (index != 6)
+        if (strncmp(env[len], find, 5) == 0)
         {
-            find[index] = env[len][index];
-            index++;
-        }
-        find[index] = '\0';
-        if (strncmp(find, "PATH=", 5) == 0)
-        {
-            PATH = malloc(strlen(env[len]) + 4);
+            PATH = malloc(strlen(env[len]) - 4);
             index = 5;
             while (env[len][index] != '\0')
             {
@@ -89,36 +81,44 @@ char *_getenv(char **env)
                 index++;
                 i++;
             }
-            PATH[index] = '\0';
+            PATH[i] = '\0';
             break;
-        }
-        else
-        {
-            index = 0;
         }
         len++;
     }
     return (PATH);
 }
 
-/**
-int add_route(char **str)
+void add_route(char *tok, char **str)
 {
     char *PATH = _getenv(environ);
-    char **dir = tokens(PATH, ":");
+    char **dir;
     int len = 0;
+    char *update = NULL;
     int success = 1;
-    char *upgrade = NULL;
 
-    while (success != 0 || dir[len] != NULL)
+    if (PATH == NULL)
     {
-        upgrade = malloc(strlen(str[0]) + strlen(dir[len]) + 2);
-        strcpy(upgrade, dir[len]);
-        strcat(upgrade, str[0]);
-        success = _execve(str, upgrade);
-        len++;
-        free(upgrade);
+        return;
     }
-    return (0);
+    dir = tokens(PATH, ":");
+    while (dir[len] != NULL)
+    {
+        update = calloc(strlen(dir[len]) + strlen(tok) + 2, sizeof(char));
+        strcat(update, dir[len]);
+        strcat(update, "/");
+        strcat(update, tok);
+        success = _execve(str, update);
+        len++;
+        free(update);
+        if (success == 0)
+        {
+            break;
+        }
+    }
+    if (success == 3)
+    {
+        perror("Error");
+    }
+    free(dir);
 }
-*/
