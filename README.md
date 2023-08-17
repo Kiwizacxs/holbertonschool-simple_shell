@@ -2,15 +2,15 @@
 <img src="https://holbertonschool.uy/wp-content/themes/holberton/assets/img/logo.png" height="60%" width="50%">
 </h1>
 
-### `C - Simple Shell` 
+### `C - Simple Shell`
 Write a simple UNIX command interpreter.
 
 ## Decription:
 Simple_shell is a standard command interpreter for the system.
-In this Readme file we will browse the different main part of this challenge, 
+In this Readme file we will browse the different main part of this challenge,
 which was been the creation of this program.
 
-### `General`   
+### `General`
 
 * Who designed and implemented the original Unix operating system
 * Who wrote the first version of the UNIX shell
@@ -27,11 +27,11 @@ which was been the creation of this program.
 * What is EOF / “end-of-file”?
 
 
-### `List of allowed functions and system calls`     
+### `List of allowed functions and system calls`
 
 |                                           Commands                                             |
 |:-------------------------------|:---------------------------:|--------------------------------:|
-| access (man 2 access)          | chdir (man 2 chdir)         |close (man 2 close)              | 
+| access (man 2 access)          | chdir (man 2 chdir)         |close (man 2 close)              |
 | closedir (man 3 closedir)      | execve (man 2 execve)       | exit (man 3 exit)               |
 | exit (man 2 _ exit)            | fflush (man 3 fflush)       | fork (man 2 fork)               |
 | free (man 3 free)              | getcwd (man 3 getcwd)       | getline (man 3 getline)         |
@@ -44,9 +44,9 @@ which was been the creation of this program.
 | write (man 2 write)            | printf                      | fprintf                         |
 | vfprintf                       | putchar                     | sprintf
 
-###  `TASKS`  
+###  `TASKS`
 
-0. README, man, AUTHORS 
+0. README, man, AUTHORS
 1. Betty would be proud : a beautiful code that passes the Betty checks
 2. Simple shell 0.1 : a UNIX command line interpreter.
 3. Simple shell 0.2 : Handle command lines with arguments
@@ -54,15 +54,15 @@ which was been the creation of this program.
 5. Simple shell 0.4 : Implement the exit built-in, that exits the shell / Usage: exit
 6. Simple shell 1.0 : Implement the env built-in, that prints the current environment
 
-### `Compilation`    
+### `Compilation`
 
-``` 
+```
 * gcc -Wall -Werror -Wextra -pedantic -std=gnu89 *.c -o hsh
 
 * This fucntion has no return value
 
 ```
-### Examples of execution: 
+### Examples of execution:
 
 $ ls -l *.c
 . -rw-rw-r-- 1 bilo bilo  319 déc.   5 23:03 _getline.c
