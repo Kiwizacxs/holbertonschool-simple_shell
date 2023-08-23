@@ -14,7 +14,7 @@ int main(void)
 
 	while (1)
 	{
-		if (fflush(stdout) != 0)
+		if (isatty(STDIN_FILENO) == 1)
 		{
 			printf("%s", prompt);
 		}
